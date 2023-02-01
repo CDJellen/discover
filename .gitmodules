@@ -1,0 +1,6 @@
+[submodule "discover-frontend"]
+	path = discover-frontend
+	url = https://github.com/CDJellen/discover-frontend.git
+[submodule "egh-api"]
+	path = egh-api
+	url = https://github.com/CDJellen/egh-api.git
