@@ -1,0 +1,6 @@
+node_modules
+/.github
+/.svelte-kit
+/build
+/web_dev
+README.md
