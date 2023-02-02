@@ -1,36 +1,45 @@
-# egh-api (backend)
-
-FROM golang:1.19 AS backend-builder
-
+FROM node:16-alpine AS frontend
 WORKDIR /build
 
-RUN mkdir backend
+COPY discover-frontend/package*.json ./
 
-COPY ./egh-api/go.mod /build/backend
-COPY ./egh-api/go.sum /build/backend
+RUN npm i -g npm
+RUN npm install --silent
 
-RUN cd backend && go mod download
+COPY discover-frontend/ .
 
-COPY ./egh-api/ /build/backend/
+RUN npm run build
 
-WORKDIR /build/backend
 
-RUN cd cmd/server/ && go build -o=egh-api -buildvcs=false  
+FROM golang:1.19-alpine as backend
 
-# deploy with frontend
+WORKDIR /build/src/server
 
-FROM node:latest as deploy
+RUN apk update && apk add git gcc musl-dev ca-certificates
 
-WORKDIR /deploy
+COPY egh-api/go.mod ./
+COPY egh-api/go.sum ./
 
-COPY --from=backend-builder /build/backend /deploy/backend
-COPY ./discover-frontend/ /deploy
+ENV GO111MODULE=on
 
-RUN npm install
-RUN npm prune
+RUN go mod download
 
+COPY egh-api/ ./
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o=server -buildvcs=false ./cmd/server
+
+
+FROM scratch
+
+WORKDIR /app
+
+COPY --from=frontend /build/frontend /app/frontend/
+COPY --from=backend /build/src/server/server /app/cmd/server/
+COPY --from=backend /build/src/server/swagger /app/swagger
+
+COPY --from=backend /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
+ENV PORT 8080
 EXPOSE 8080
-EXPOSE 5173
 
-COPY ./launcher.sh /deploy/launcher.sh
-ENTRYPOINT [ "./launcher.sh" ]
+ENTRYPOINT [ "/app/cmd/server/server" ]
