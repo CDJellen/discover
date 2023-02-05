@@ -1,4 +1,5 @@
 FROM node:16-alpine AS frontend
+
 WORKDIR /build
 
 COPY discover-frontend/package*.json ./
@@ -7,6 +8,10 @@ RUN npm i -g npm
 RUN npm install --silent
 
 COPY discover-frontend/ .
+
+ENV PUBLIC_WRITE_FOOTER=true
+RUN touch .env
+RUN printenv > .env
 
 RUN npm run build
 
