@@ -27,4 +27,4 @@ jobs:
 
     - name: Push image
       run: |
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/spring-petclinic:${{ github.run_number }}
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/discover-open-source:${{ github.run_number }}
