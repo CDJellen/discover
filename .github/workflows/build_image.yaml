@@ -3,21 +3,21 @@ on:
     branches:
       - 'releases/**'
 
+name: Build and Push to ACR
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-image:
+    runs-on: ubuntu-latest    
     steps:
-      - name: ACR build
-        id: acr
-        uses: azure/acr-build@v1
-        with:
-          service_principal: ${{ secrets.service_principal }}
-          service_principal_password: ${{ secrets.service_principal_password }}
-          tenant: ${{ secrets.tenant }}
-          registry: ${{ secrets.registry }}
-          repository: ${{ secrets.repository }}
-          image: discover-open-source
-          git_access_token: ${{ secrets.git_access_token }}
-          folder: /
-          dockerfile: Dockerfile
-          branch: trunk
+    - name: Checkout
+      uses: actions/checkout@v2    
+
+    - name: Login to the Container Registry  
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - name: Build and Tag image
+      run: |
+        docker build -f ./Dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/discover-open-source:${{ github.run_number }} .
