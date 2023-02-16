@@ -1,5 +1,6 @@
 
 version: '3'
+
 services:
   redis:
     image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
@@ -11,9 +12,9 @@ services:
     volumes:
       - redis_data:/data
 
-  egh-back:
+  egh-api:
     image: eghacr.azurecr.io/egh-api:latest
-    container_name: egh-back
+    container_name: egh-api
     build: ./egh-api
     ports:
         - "8080:8080"
@@ -22,6 +23,8 @@ services:
     image: eghacr.azurecr.io/egh-front:latest
     container_name: egh-front
     build: ./discover-frontend
+    environment:
+      - PUBLIC_API_ENDPOINT=http://egh-api:8080/api/v1
     ports:
         - "5173:5173"
 
