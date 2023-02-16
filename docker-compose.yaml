@@ -2,13 +2,15 @@
 version: '3'
 
 services:
-  redis:
+  egh-cache:
     image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
     container_name: egh-cache
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
     ports:
-        - "6379:6379"
+      - "6379:6379"
+    networks:
+      - eghnet
     volumes:
       - redis_data:/data
 
@@ -16,18 +18,39 @@ services:
     image: eghacr.azurecr.io/egh-api:latest
     container_name: egh-api
     build: ./egh-api
+    command: --redis=egh-cache:6379
     ports:
-        - "8080:8080"
+      - "8080:8080"
+    links:
+      - egh-cache
+    depends_on:
+      - egh-cache
+    networks:
+      - eghnet
+    env_file: .egh-api.env
 
   egh-front:
     image: eghacr.azurecr.io/egh-front:latest
     container_name: egh-front
     build: ./discover-frontend
     environment:
-      - PUBLIC_API_ENDPOINT=http://egh-api:8080/api/v1
+      - PUBLIC_API_ENDPOINT=http://localhost:8080/api/v1
     ports:
-        - "5173:5173"
+      - "5173:5173"
+    links:
+      - egh-api
+    depends_on:
+      - egh-api
+    networks:
+      - eghnet
 
 volumes:
   redis_data:
     external: false
+
+secrets:
+  egh-api-env:
+    file: .egh-api.env
+
+networks:
+  eghnet:
