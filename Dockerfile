@@ -10,6 +10,8 @@ RUN npm install --silent
 COPY discover-frontend/ .
 
 ENV PUBLIC_WRITE_FOOTER=true
+ENV PUBLIC_API_ENDPOINT=http://localhost:8080/api/v1
+
 RUN touch .env
 RUN printenv > .env
 
@@ -48,3 +50,4 @@ ENV PORT 8080
 EXPOSE 8080
 
 ENTRYPOINT [ "/app/cmd/server/server" ]
+CMD ["--store=mem"]
