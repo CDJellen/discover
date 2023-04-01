@@ -10,7 +10,7 @@ RUN npm install --silent
 COPY discover-frontend/ .
 
 ENV PUBLIC_WRITE_FOOTER=true
-ENV PUBLIC_API_ENDPOINT=http://localhost:8080/api/v1
+ENV PUBLIC_API_ENDPOINT=/api/v1
 
 RUN touch .env
 RUN printenv > .env
@@ -36,18 +36,16 @@ COPY egh-api/ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o=server -buildvcs=false ./cmd/server
 
 
-FROM scratch
+FROM ubuntu:20.04
 
 WORKDIR /app
 
 COPY --from=frontend /build/frontend /app/frontend/
 COPY --from=backend /build/src/server/server /app/cmd/server/
-COPY --from=backend /build/src/server/swagger /app/swagger
+COPY --from=backend /build/src/server/swagger /app/swagger/
 
 COPY --from=backend /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-ENV PORT 8080
 EXPOSE 8080
 
-ENTRYPOINT [ "/app/cmd/server/server" ]
-CMD ["--store=mem"]
+ENTRYPOINT [ "/app/cmd/server/server", "--store", "mem" ]
