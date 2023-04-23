@@ -2,3 +2,5 @@
 *.env
 *.yml
 vendor
+*.tar
+*.tar.gz
