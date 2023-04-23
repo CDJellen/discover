@@ -14,11 +14,14 @@ services:
     volumes:
       - redis_data:/data
 
-  egh-api:
-    image: eghacr.azurecr.io/egh-api:latest
-    container_name: egh-api
-    build: ./egh-api
-    command: --redis=egh-cache:6379
+  egh-mono:
+    image: eghacr.azurecr.io/egh-mono:latest
+    container_name: egh-mono
+    build: .
+    command:
+      - --store=redis
+      - --redis=egh-cache:6379
+      - --gw=:8080
     ports:
       - "8080:8080"
     links:
@@ -28,21 +31,6 @@ services:
     networks:
       - eghnet
     env_file: .egh-api.env
-
-  egh-front:
-    image: eghacr.azurecr.io/egh-front:latest
-    container_name: egh-front
-    build: ./discover-frontend
-    environment:
-      - PUBLIC_API_ENDPOINT=egh-api:8080/api/v1
-    ports:
-      - "5173:5173"
-    links:
-      - egh-api
-    depends_on:
-      - egh-api
-    networks:
-      - eghnet
 
 volumes:
   redis_data:
