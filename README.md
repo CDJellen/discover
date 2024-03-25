@@ -18,7 +18,6 @@ nano egh-api.env
 Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
 ```bash
-README_ENDPOINT=http://...  # optional endpoint to retrieve README files from repository nodes.
 GITHUB_TOKEN=ghp_...  # access token required to leverage the GraphQL API (does not need any permissions)
 ```
 
