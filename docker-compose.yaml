@@ -30,7 +30,7 @@ services:
       - egh-cache
     networks:
       - eghnet
-    env_file: .egh-api.env
+    env_file: .env
 
 volumes:
   redis_data:
@@ -38,7 +38,7 @@ volumes:
 
 secrets:
   egh-api-env:
-    file: .egh-api.env
+    file: .env
 
 networks:
   eghnet:
