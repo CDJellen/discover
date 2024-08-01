@@ -26,7 +26,7 @@ Launch the containers.
 docker compose up -d
 ```
 
-Navigate to `http://localhost:8080` to start exploring, or `http://localhost:8080/api/docs` for interactive API documentation.
+Navigate to `http://localhost:8000` to start exploring, or `http://localhost:8000/api/docs` for interactive API documentation.
 
 ### Overview
 
