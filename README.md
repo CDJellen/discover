@@ -6,13 +6,13 @@ A novel, interactive, graph-based interface for discovering new GitHub repositor
 #### Start Exploring
 
 ```bash
-git clone --recursive https://hithub.com/cdjellen/discover.git
+git clone --recursive https://github.com/cdjellen/discover.git
 cd discover
 ```
-Create the `egh-api.env` settings.
+Create the `.env` settings.
 ```bash
-touch egh-api.env
-nano egh-api.env
+touch .env
+nano .env
 ```
 
 Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
