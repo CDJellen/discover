@@ -21,9 +21,9 @@ services:
     command:
       - --store=redis
       - --redis=egh-cache:6379
-      - --gw=:8080
+      - --gw=:8000
     ports:
-      - "8080:8080"
+      - "8000:8000"
     links:
       - egh-cache
     depends_on:
