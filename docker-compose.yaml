@@ -15,7 +15,7 @@ services:
       - redis_data:/data
 
   egh-mono:
-    image: eghacr.azurecr.io/egh-mono:latest
+    image: ghcr.io/cdjellen/egh-mono:latest
     container_name: egh-mono
     build: .
     command:
