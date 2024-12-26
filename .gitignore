@@ -4,3 +4,5 @@
 vendor
 *.tar
 *.tar.gz
+fly.toml
+fly.cache
